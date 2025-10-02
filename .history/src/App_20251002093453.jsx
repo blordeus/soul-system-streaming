@@ -132,7 +132,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
 
 
   {/* Body */}
-  <main className="flex-1 grid grid-cols-1 md:grid-cols-[350px_1fr] gap-6 p-6 bg-[var(--card)]/70 backdrop-blur rounded-2xl md:rounded-none">
+  <main className="flex-1 grid grid-cols-1 md:grid-cols-[350px_1fr] gap-6 p-6">
     {/* Left: album cover */}
     <div className="flex items-start justify-center">
       <div className="w-64 md:w-80 rounded-2xl overflow-hidden shadow-lg">

@@ -114,7 +114,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
   <header
   className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]"
   style={{
-    backgroundColor: "rgba(0,0,0,0.8)",
+    backgroundColor: "rgba(0,0,0,0.2)",
     backdropFilter: "blur(6px)",
   }}
 >
@@ -132,7 +132,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
 
 
   {/* Body */}
-  <main className="flex-1 grid grid-cols-1 md:grid-cols-[350px_1fr] gap-6 p-6 bg-[var(--card)]/70 backdrop-blur rounded-2xl md:rounded-none">
+  <main className="flex-1 grid grid-cols-1 md:grid-cols-[350px_1fr] gap-6 p-6">
     {/* Left: album cover */}
     <div className="flex items-start justify-center">
       <div className="w-64 md:w-80 rounded-2xl overflow-hidden shadow-lg">
@@ -202,32 +202,17 @@ export default function App(){
   const isEmbed = window.location.pathname.startsWith("/embed");
 
   return (
-    <div
-  className="min-h-screen flex flex-col"
-  style={{
-    backgroundColor: BRAND.colors.bg,
-    fontFamily: BRAND.fontFamily,
-    backgroundImage: BRAND.backgroundImage
-      ? `linear-gradient(rgba(5,5,6,0.6), rgba(5,5,6,0.6)), url(${asset(BRAND.backgroundImage)})`
-      : undefined,
-    backgroundSize: BRAND.backgroundImage ? "cover" : undefined,
-    backgroundPosition: BRAND.backgroundImage ? "center" : undefined,
-  }}
->
-  <PlayerUI ALBUM={ALBUM} BRAND={BRAND} embed={isEmbed} />
-  <style>{`
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: url('/img/noise-texture.png');
-      background-size: cover;
-      opacity: 0.08;
-      pointer-events: none;
-      z-index: -1;
-    }
-  `}</style>
-</div>
-
+    <div className="min-h-screen flex items-center justify-center p-6" style={{
+      backgroundColor: BRAND.colors.bg,
+      fontFamily: BRAND.fontFamily,
+      backgroundImage: BRAND.backgroundImage ? `linear-gradient(rgba(5,5,6,0.88), rgba(5,5,6,0.88)), url(${asset(BRAND.backgroundImage)})` : undefined,
+      backgroundSize: BRAND.backgroundImage ? 'cover' : undefined,
+      backgroundPosition: BRAND.backgroundImage ? 'center' : undefined
+    }}>
+      <PlayerUI ALBUM={ALBUM} BRAND={BRAND} embed={isEmbed}/>
+      <style>{`
+        body::before {content:'';position:fixed;top:0;left:0;right:0;bottom:0;background:url('/img/noise-texture.png');background-size:cover;opacity:0.15;pointer-events:none;z-index:0;}
+      `}</style>
+    </div>
   );
 }
