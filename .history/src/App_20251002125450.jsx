@@ -126,7 +126,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
       className="h-16 md:h-28"
     />
   )}
-  <h1 className="text-xl md:text-6xl font-bold tracking-wide text-white">
+  <h1 className="text-xl md:text-3xl font-bold tracking-wide text-white">
     {BRAND.appName}
   </h1>
 </header>

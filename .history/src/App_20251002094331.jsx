@@ -112,38 +112,30 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
     <div className="flex flex-col min-h-screen">
   {/* Header */}
   <header
-  className="flex items-center justify-center gap-3 px-8 py-6 border-b border-[var(--border)]"
+  className="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]"
   style={{
-    background: `linear-gradient(90deg, ${BRAND.colors.accent} 0%, ${BRAND.colors.accentSecondary} 50%, ${BRAND.colors.accent} 100%)`,
-    // color: "#fff",
-    backdropFilter: "blur(6px)"
+    backgroundColor: "rgba(0,0,0,0.8)",
+    backdropFilter: "blur(6px)",
   }}
 >
   {BRAND.logo && (
     <img
       src={asset(BRAND.logo)}
       alt={BRAND.appName}
-      className="h-16 md:h-28"
+      className="h-8 md:h-10"
     />
   )}
-  <h1 className="text-xl md:text-6xl font-bold tracking-wide text-white">
+  <h1 className="text-lg md:text-xl font-bold tracking-wide">
     {BRAND.appName}
   </h1>
 </header>
 
 
   {/* Body */}
-  <main className="flex-1 grid grid-cols-1
-    md:grid-cols-[55%_45%]
-    lg:grid-cols-[60%_40%]
-    xl:grid-cols-[62%_38%]
-    gap-6 md:gap-8
-    px-4 md:px-8 lg:px-16 xl:px-24
-    py-6 md:py-8
-    max-w-[1700px] w-full mx-auto">
+  <main className="flex-1 grid grid-cols-1 md:grid-cols-[40px_1fr] gap-6 p-6 bg-[var(--card)]/70 backdrop-blur rounded-2xl md:rounded-none">
     {/* Left: album cover */}
     <div className="flex items-start justify-center">
-      <div className="w-64 md:w-[600px] rounded-2xl overflow-hidden shadow-lg">
+      <div className="w-64 md:w-80 rounded-2xl overflow-hidden shadow-lg">
         <img
           src={asset(ALBUM.cover)}
           alt={`${ALBUM.title} cover`}
@@ -156,9 +148,9 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
     <div className="flex flex-col">
       {/* Now Playing */}
       <div className="mb-4">
-        <h2 className="text-3xl font-semibold text-white">{ALBUM.title}</h2>
-        {/* <p className="text-zinc-400">{ALBUM.artist}</p> */}
-        <p className="text-sm text-white mt-1">{track?.title}</p>
+        <h2 className="text-2xl font-semibold">{ALBUM.title}</h2>
+        <p className="text-zinc-400">{ALBUM.artist}</p>
+        <p className="text-sm text-zinc-500 mt-1">{track?.title}</p>
       </div>
 
       {/* Controls */}
@@ -177,7 +169,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
 </div>
 
       {/* Tracklist */}
-      <ol className="space-y-2 overflow-auto flex-1 mt-6">
+      <ol className="space-y-2 overflow-auto flex-1">
         {ALBUM.tracks.map((t, i) => (
           <li key={t.id}>
             <button
@@ -188,7 +180,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
               }}
               className={`w-full px-3 py-2 rounded-lg flex justify-between ${
                 i === index
-                  ? "bg-[#f5b14b] text-black"
+                  ? "bg-[var(--accent)] text-black"
                   : "bg-zinc-800/70 hover:bg-zinc-700"
               }`}
             >

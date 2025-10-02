@@ -114,9 +114,9 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
   <header
   className="flex items-center justify-center gap-3 px-8 py-6 border-b border-[var(--border)]"
   style={{
-    background: `linear-gradient(90deg, ${BRAND.colors.accent} 0%, ${BRAND.colors.accentSecondary} 50%, ${BRAND.colors.accent} 100%)`,
-    // color: "#fff",
-    backdropFilter: "blur(6px)"
+    background: `linear-gradient(90deg, ${BRAND.colors.accent} 0%, ${BRAND.colors.accentSecondary} 100%)`,
+    color: "#fff",
+    backdropFilter: "blur(6px)",
   }}
 >
   {BRAND.logo && (
@@ -126,24 +126,17 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
       className="h-16 md:h-28"
     />
   )}
-  <h1 className="text-xl md:text-6xl font-bold tracking-wide text-white">
+  <h1 className="text-xl md:text-3xl font-bold tracking-wide text-white">
     {BRAND.appName}
   </h1>
 </header>
 
 
   {/* Body */}
-  <main className="flex-1 grid grid-cols-1
-    md:grid-cols-[55%_45%]
-    lg:grid-cols-[60%_40%]
-    xl:grid-cols-[62%_38%]
-    gap-6 md:gap-8
-    px-4 md:px-8 lg:px-16 xl:px-24
-    py-6 md:py-8
-    max-w-[1700px] w-full mx-auto">
+  <main className="flex-1 grid grid-cols-1 md:grid-cols-[400px_1fr] md:px-12 lg:px-20 gap-6 p-6 bg-[var(--card)]/70 backdrop-blur rounded-2xl md:rounded-none">
     {/* Left: album cover */}
     <div className="flex items-start justify-center">
-      <div className="w-64 md:w-[600px] rounded-2xl overflow-hidden shadow-lg">
+      <div className="w-64 md:w-80 rounded-2xl overflow-hidden shadow-lg">
         <img
           src={asset(ALBUM.cover)}
           alt={`${ALBUM.title} cover`}
@@ -156,7 +149,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
     <div className="flex flex-col">
       {/* Now Playing */}
       <div className="mb-4">
-        <h2 className="text-3xl font-semibold text-white">{ALBUM.title}</h2>
+        <h2 className="text-2xl font-semibold">{ALBUM.title}</h2>
         {/* <p className="text-zinc-400">{ALBUM.artist}</p> */}
         <p className="text-sm text-white mt-1">{track?.title}</p>
       </div>
@@ -177,7 +170,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
 </div>
 
       {/* Tracklist */}
-      <ol className="space-y-2 overflow-auto flex-1 mt-6">
+      <ol className="space-y-2 overflow-auto flex-1">
         {ALBUM.tracks.map((t, i) => (
           <li key={t.id}>
             <button

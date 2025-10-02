@@ -126,7 +126,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
       className="h-16 md:h-28"
     />
   )}
-  <h1 className="text-xl md:text-6xl font-bold tracking-wide text-white">
+  <h1 className="text-xl md:text-3xl font-bold tracking-wide text-white">
     {BRAND.appName}
   </h1>
 </header>
@@ -156,7 +156,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
     <div className="flex flex-col">
       {/* Now Playing */}
       <div className="mb-4">
-        <h2 className="text-3xl font-semibold text-white">{ALBUM.title}</h2>
+        <h2 className="text-2xl font-semibold text-white">{ALBUM.title}</h2>
         {/* <p className="text-zinc-400">{ALBUM.artist}</p> */}
         <p className="text-sm text-white mt-1">{track?.title}</p>
       </div>

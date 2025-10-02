@@ -126,7 +126,7 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
       className="h-16 md:h-28"
     />
   )}
-  <h1 className="text-xl md:text-6xl font-bold tracking-wide text-white">
+  <h1 className="text-xl md:text-3xl font-bold tracking-wide text-white">
     {BRAND.appName}
   </h1>
 </header>
@@ -142,21 +142,22 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
     py-6 md:py-8
     max-w-[1700px] w-full mx-auto">
     {/* Left: album cover */}
-    <div className="flex items-start justify-center">
-      <div className="w-64 md:w-[600px] rounded-2xl overflow-hidden shadow-lg">
-        <img
-          src={asset(ALBUM.cover)}
-          alt={`${ALBUM.title} cover`}
-          className="w-full h-auto object-cover"
-        />
-      </div>
+    <aside>
+    <div className="rounded-2xl overflow-hidden shadow-2xl">
+      <img
+        src={asset(ALBUM.cover)}
+        alt={`${ALBUM.title} cover`}
+        className="w-full h-auto object-cover
+                   max-w-[400px] md:max-w-[440px] lg:max-w-[520px] xl:max-w-[600px]"
+      />
     </div>
+  </aside>
 
     {/* Right: player + tracklist */}
     <div className="flex flex-col">
       {/* Now Playing */}
       <div className="mb-4">
-        <h2 className="text-3xl font-semibold text-white">{ALBUM.title}</h2>
+        <h2 className="text-2xl font-semibold">{ALBUM.title}</h2>
         {/* <p className="text-zinc-400">{ALBUM.artist}</p> */}
         <p className="text-sm text-white mt-1">{track?.title}</p>
       </div>
