@@ -42,24 +42,15 @@ const DEFAULT_ALBUM = {
   },
   tracks: [
     // ❗ served from /public/audio but referenced as /audio in the app
-    { id: "t1", 
-      title: "Reboot", 
-      src: "/audio/01.mp3", 
-      durationHint: 0 },
-    { id: "t2", 
-      title: "Summer Solace", 
-      src: "/audio/02.mp3", 
-      durationHint: 0 },
+    { id: "t1", title: "Reboot", src: "/audio/01.mp3", durationHint: 0 },
+    { id: "t2", title: "Summer Solace", src: "/audio/02.mp3", durationHint: 0 },
     {
       id: "t3",
       title: "In the Wilderness",
       src: "/audio/03.mp3",
       durationHint: 0,
     },
-    { id: "t4", 
-      title: "Butterflies", 
-      src: "/audio/04.mp3", 
-      durationHint: 0 },
+    { id: "t4", title: "Butterflies", src: "/audio/04.mp3", durationHint: 0 },
     {
       id: "t5",
       title: "Foggy Night of the Soul",
@@ -78,24 +69,15 @@ const DEFAULT_ALBUM = {
       src: "/audio/07.mp3",
       durationHint: 0,
     },
-    { id: "t8", 
-      title: "New Habits", 
-      src: "/audio/08.mp3", 
-      durationHint: 0 },
+    { id: "t8", title: "New Habits", src: "/audio/08.mp3", durationHint: 0 },
     {
       id: "t9",
       title: "Childlike Wonder/You Make The Sun Rise",
       src: "/audio/09.mp3",
       durationHint: 0,
     },
-    { id: "t10", 
-      title: "A Muse Sings", 
-      src: "/audio/10.mp3", 
-      durationHint: 0 },
-    { id: "t11", 
-      title: "System Shift", 
-      src: "/audio/11.mp3", 
-      durationHint: 0 },
+    { id: "t10", title: "A Muse Sings", src: "/audio/10.mp3", durationHint: 0 },
+    { id: "t11", title: "System Shift", src: "/audio/11.mp3", durationHint: 0 },
     {
       id: "t12",
       title: "Lost or Found?",
@@ -206,6 +188,23 @@ function PlayerUI({ ALBUM, BRAND, embed = false }) {
       // isPlaying will be updated by event listener
     }
   };
+
+  // const nextIndex = () => (index+1<ALBUM.tracks.length ? index+1 : (repeatMode==="all"?0:index));
+  // const prevIndex = () => (index-1>=0 ? index-1 : 0);
+
+  // const handleEnded = () => {
+  //   const ni = nextIndex();
+  //   if (ni === index && repeatMode === "off") {
+  //     setIsPlaying(false);
+  //     setProgress(0);
+  //     audioRef.current && (audioRef.current.currentTime = 0);
+  //     return;
+  //   }
+  //   setIndex(ni);
+  //   // Autoplay next
+  //   requestAnimationFrame(() => audioRef.current?.play().catch(()=>{}));
+  //   setIsPlaying(true);
+  // };
 
   const seek = (s) => {
     const a = audioRef.current;

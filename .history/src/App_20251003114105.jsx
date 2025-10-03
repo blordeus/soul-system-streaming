@@ -94,8 +94,7 @@ const DEFAULT_ALBUM = {
       durationHint: 0 },
     { id: "t11", 
       title: "System Shift", 
-      src: "/audio/11.mp3", 
-      durationHint: 0 },
+      src: "/audio/11.mp3", durationHint: 0 },
     {
       id: "t12",
       title: "Lost or Found?",
