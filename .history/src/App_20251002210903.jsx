@@ -371,7 +371,7 @@ useEffect(() => {
 
 
           {/* Volume Controls */}
-<div className="mt-4 flex items-center gap-3 justify-center lg:justify-start">
+<div className="mt-4 flex items-center gap-3">
   <button
      onClick={() => setMuted(!muted)}
     className="p-2 rounded-full transition"
@@ -393,7 +393,7 @@ useEffect(() => {
   value={muted ? 0 : volume}
   onChange={(e) => setVolume(parseFloat(e.target.value))}
   className="
-    w-48 h-2 rounded-lg appearance-none cursor-pointer
+    w-32 h-2 rounded-lg appearance-none cursor-pointer
     bg-zinc-700
     accent-[var(--accent)]
   "

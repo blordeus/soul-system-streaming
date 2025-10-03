@@ -44,11 +44,11 @@ const DEFAULT_ALBUM = {
     { id: "t5",  title: "Foggy Night of the Soul",   src: "/audio/05.mp3",  durationHint: 0 },
     { id: "t6",  title: "It Was All a Dream",src: "/audio/06.mp3",  durationHint: 0 },
     { id: "t7",  title: "Blaque Nostalgia", src: "/audio/07.mp3",  durationHint: 0 },
-    { id: "t8",  title: "New Habits",    src: "/audio/08.mp3",  durationHint: 0 },
-    { id: "t9",  title: "Childlike Wonder/You Make The Sun Rise",     src: "/audio/09.mp3",  durationHint: 0 },
-    { id: "t10", title: "A Muse Sings",     src: "/audio/10.mp3",  durationHint: 0 },
-    { id: "t11", title: "System Shift",    src: "/audio/11.mp3",  durationHint: 0 },
-    { id: "t12", title: "Lost or Found?",   src: "/audio/12.mp3",  durationHint: 0 },
+    { id: "t8",  title: "08 — Black Sky",    src: "/audio/08.mp3",  durationHint: 0 },
+    { id: "t9",  title: "09 — Ion Rain",     src: "/audio/09.mp3",  durationHint: 0 },
+    { id: "t10", title: "10 — Meridian",     src: "/audio/10.mp3",  durationHint: 0 },
+    { id: "t11", title: "11 — Cold Fire",    src: "/audio/11.mp3",  durationHint: 0 },
+    { id: "t12", title: "12 — Blue Shift",   src: "/audio/12.mp3",  durationHint: 0 },
     // { id: "t13", title: "13 — Night Signal", src: "/audio/13.mp3", durationHint: 0 }
   ],
 };
@@ -371,7 +371,7 @@ useEffect(() => {
 
 
           {/* Volume Controls */}
-<div className="mt-4 flex items-center gap-3 justify-center lg:justify-start">
+<div className="mt-4 flex items-center gap-3">
   <button
      onClick={() => setMuted(!muted)}
     className="p-2 rounded-full transition"
@@ -393,7 +393,7 @@ useEffect(() => {
   value={muted ? 0 : volume}
   onChange={(e) => setVolume(parseFloat(e.target.value))}
   className="
-    w-48 h-2 rounded-lg appearance-none cursor-pointer
+    w-32 h-2 rounded-lg appearance-none cursor-pointer
     bg-zinc-700
     accent-[var(--accent)]
   "
