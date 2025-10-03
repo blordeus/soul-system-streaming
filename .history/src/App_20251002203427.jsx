@@ -137,22 +137,25 @@ const handleEnded = () => {
 
 
   const togglePlay = async () => {
-  const a = audioRef.current;
-  if (!a) return;
-
-  if (a.paused) {
-    try {
-      await a.play();
-      // isPlaying will be updated by event listener
-    } catch (err) {
-      console.error("Play failed:", err);
-    }
-  } else {
-    a.pause();
-    // isPlaying will be updated by event listener
+    useEffect(() => {
+  if (audioRef.current) {
+    audioRef.current.volume = muted ? 0 : volume;
   }
-};
+}, [volume, muted]);
 
+    const a = audioRef.current;
+    if (!a) return;
+    if (isPlaying) { a.pause(); setIsPlaying(false); }
+    else {
+      try {
+        a.volume = muted ? 0 : volume;
+        await a.play();
+        setIsPlaying(true);
+      } catch {
+        setIsPlaying(false);
+      }
+    }
+  };
 
   // const nextIndex = () => (index+1<ALBUM.tracks.length ? index+1 : (repeatMode==="all"?0:index));
   // const prevIndex = () => (index-1>=0 ? index-1 : 0);
@@ -187,31 +190,6 @@ const handleEnded = () => {
 const onTimeUpdate = () => {
   if (audioRef.current) setProgress(audioRef.current.currentTime);
 };
-
-useEffect(() => {
-  const a = audioRef.current;
-  if (!a) return;
-
-  const handlePlay = () => setIsPlaying(true);
-  const handlePause = () => setIsPlaying(false);
-
-  a.addEventListener("play", handlePlay);
-  a.addEventListener("pause", handlePause);
-
-  return () => {
-    a.removeEventListener("play", handlePlay);
-    a.removeEventListener("pause", handlePause);
-  };
-}, []);
-
-useEffect(() => {
-  if (audioRef.current) {
-    audioRef.current.muted = muted;
-    audioRef.current.volume = muted ? 0 : volume;
-  }
-}, [volume, muted]);
-
-
 
 
   // ---- UI ----
@@ -330,16 +308,9 @@ useEffect(() => {
   </button>
 
   {/* Next — wraps to first on last */}
-  <button onClick={() => {
-  const ni = nextIndex({ fromButton:true });
-  setIndex(ni);
-  setProgress(0);
-  setDuration(0);
-  requestAnimationFrame(() => audioRef.current?.play().catch(()=>{}));
-  setIsPlaying(true);
-}} className="p-2 rounded-full bg-[#cfa56a]">
-  <SkipForward className="w-4 h-4" />
-</button>
+  <button onClick={() => setIndex(nextIndex({ fromButton: true }))} className="p-2 rounded-full bg-[#cfa56a]">
+    <SkipForward className="w-4 h-4" />
+  </button>
 
   {/* Repeat: off -> one -> all */}
   <button
@@ -373,13 +344,11 @@ useEffect(() => {
           {/* Volume Controls */}
 <div className="mt-4 flex items-center gap-3">
   <button
-     onClick={() => setMuted(!muted)}
-    className="p-2 rounded-full transition"
-    style={{ background: muted || volume === 0 ? "#7a5cff" : "#cfa56a" }}
-    title={muted ? "Unmute" : "Mute"}
+    onClick={() => setMuted(!muted)}
+    className="p-2 rounded-full bg-[#cfa56a] hover:bg-[#f5b14b] transition"
   >
     {muted || volume === 0 ? (
-      <VolumeX className="w-4 h-4 text-white" />
+      <VolumeX className="w-4 h-4 text-black" />
     ) : (
       <Volume2 className="w-4 h-4 text-black" />
     )}

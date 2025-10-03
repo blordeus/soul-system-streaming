@@ -204,12 +204,6 @@ useEffect(() => {
   };
 }, []);
 
-useEffect(() => {
-  if (audioRef.current) {
-    audioRef.current.muted = muted;
-    audioRef.current.volume = muted ? 0 : volume;
-  }
-}, [volume, muted]);
 
 
 
@@ -373,13 +367,11 @@ useEffect(() => {
           {/* Volume Controls */}
 <div className="mt-4 flex items-center gap-3">
   <button
-     onClick={() => setMuted(!muted)}
-    className="p-2 rounded-full transition"
-    style={{ background: muted || volume === 0 ? "#7a5cff" : "#cfa56a" }}
-    title={muted ? "Unmute" : "Mute"}
+    onClick={() => setMuted(!muted)}
+    className="p-2 rounded-full bg-[#cfa56a] hover:bg-[#f5b14b] transition"
   >
     {muted || volume === 0 ? (
-      <VolumeX className="w-4 h-4 text-white" />
+      <VolumeX className="w-4 h-4 text-black" />
     ) : (
       <Volume2 className="w-4 h-4 text-black" />
     )}

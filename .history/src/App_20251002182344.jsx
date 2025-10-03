@@ -93,126 +93,64 @@ function PlayerUI({ ALBUM, BRAND, embed=false }) {
   const [repeatMode, setRepeatMode] = useState("off");
   const audioRef = useRef(null);
   const track = ALBUM.tracks[index] ?? ALBUM.tracks[0];
-  const [durations, setDurations] = useState({}); // { [trackId]: seconds }
-
-  const pickRandomIndex = () => {
-  if (ALBUM.tracks.length <= 1) return index;
-  let r = index;
-  while (r === index) r = Math.floor(Math.random() * ALBUM.tracks.length);
-  return r;
-};
-
-// Wrap on manual "Next"; respect repeat for auto-advance on ended
-const nextIndex = ({ fromButton = false } = {}) => {
-  if (shuffle) return pickRandomIndex();
-  const n = index + 1;
-  if (n < ALBUM.tracks.length) return n;
-  return fromButton ? 0 : (repeatMode === "all" ? 0 : index); // wrap only if button, or if repeat all on ended
-};
-
-const prevIndex = () => {
-  if (shuffle) return pickRandomIndex();
-  const p = index - 1;
-  return p >= 0 ? p : (ALBUM.tracks.length - 1); // wrap prev
-};
-
-const handleEnded = () => {
-  if (repeatMode === "one") {
-    audioRef.current.currentTime = 0;
-    audioRef.current.play().catch(()=>{});
-    setIsPlaying(true);
-    return;
-  }
-  const ni = nextIndex({ fromButton: false });
-  if (ni === index && repeatMode === "off") {
-    setIsPlaying(false);
-    setProgress(0);
-    return;
-  }
-  setIndex(ni);
-  requestAnimationFrame(() => audioRef.current?.play().catch(()=>{}));
-  setIsPlaying(true);
-};
-
-
 
   const togglePlay = async () => {
-  const a = audioRef.current;
-  if (!a) return;
-
-  if (a.paused) {
-    try {
-      await a.play();
-      // isPlaying will be updated by event listener
-    } catch (err) {
-      console.error("Play failed:", err);
-    }
-  } else {
-    a.pause();
-    // isPlaying will be updated by event listener
-  }
-};
-
-
-  // const nextIndex = () => (index+1<ALBUM.tracks.length ? index+1 : (repeatMode==="all"?0:index));
-  // const prevIndex = () => (index-1>=0 ? index-1 : 0);
-
-  // const handleEnded = () => {
-  //   const ni = nextIndex();
-  //   if (ni === index && repeatMode === "off") {
-  //     setIsPlaying(false);
-  //     setProgress(0);
-  //     audioRef.current && (audioRef.current.currentTime = 0);
-  //     return;
-  //   }
-  //   setIndex(ni);
-  //   // Autoplay next
-  //   requestAnimationFrame(() => audioRef.current?.play().catch(()=>{}));
-  //   setIsPlaying(true);
-  // };
-
-  const seek = (s) => {
-  const a = audioRef.current;
-  if (!a) return;
-  const t = clamp(s, 0, a.duration || duration || 0);
-  a.currentTime = t;
-  setProgress(t);
-};
-
-
-  const onLoadedMetadata = () => {
-  if (audioRef.current) setDuration(audioRef.current.duration || 0);
-};
-
-const onTimeUpdate = () => {
-  if (audioRef.current) setProgress(audioRef.current.currentTime);
-};
-
-useEffect(() => {
-  const a = audioRef.current;
-  if (!a) return;
-
-  const handlePlay = () => setIsPlaying(true);
-  const handlePause = () => setIsPlaying(false);
-
-  a.addEventListener("play", handlePlay);
-  a.addEventListener("pause", handlePause);
-
-  return () => {
-    a.removeEventListener("play", handlePlay);
-    a.removeEventListener("pause", handlePause);
-  };
-}, []);
-
-useEffect(() => {
+    useEffect(() => {
   if (audioRef.current) {
-    audioRef.current.muted = muted;
     audioRef.current.volume = muted ? 0 : volume;
   }
 }, [volume, muted]);
 
+    const a = audioRef.current;
+    if (!a) return;
+    if (isPlaying) { a.pause(); setIsPlaying(false); }
+    else {
+      try {
+        a.volume = muted ? 0 : volume;
+        await a.play();
+        setIsPlaying(true);
+      } catch {
+        setIsPlaying(false);
+      }
+    }
+  };
 
+  const nextIndex = () => (index+1<ALBUM.tracks.length ? index+1 : (repeatMode==="all"?0:index));
+  const prevIndex = () => (index-1>=0 ? index-1 : 0);
 
+  const handleEnded = () => {
+    const ni = nextIndex();
+    if (ni === index && repeatMode === "off") {
+      setIsPlaying(false);
+      setProgress(0);
+      audioRef.current && (audioRef.current.currentTime = 0);
+      return;
+    }
+    setIndex(ni);
+    // Autoplay next
+    requestAnimationFrame(() => audioRef.current?.play().catch(()=>{}));
+    setIsPlaying(true);
+  };
+
+  const seek = (s) => {
+    const a = audioRef.current;
+    if (!a) return;
+    const t = clamp(s, 0, a.duration || duration || 0);
+    a.currentTime = t;
+    setProgress(t);
+  };
+
+  const onLoadedMetadata = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    setDuration(a.duration || duration || 0);
+  };
+
+  const onTimeUpdate = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    setProgress(a.currentTime || 0);
+  };
 
   // ---- UI ----
   return (
@@ -236,9 +174,9 @@ useEffect(() => {
           {BRAND.appName}
         </h1>
 
-          {/* Platform Links row */}
+         {/* Platform Links */}
   {ALBUM.links && (
-    <div className="mt-4 flex justify-center gap-4">
+    <div className="mt-4 flex flex-wrap justify-center gap-3">
       {ALBUM.links.spotify && (
         <a
           href={ALBUM.links.spotify}
@@ -259,9 +197,9 @@ useEffect(() => {
           Apple Music
         </a>
       )}
-      {ALBUM.links.bandcamp && (
+      {ALBUM.links.presave && (
         <a
-          href={ALBUM.links.bandcamp}
+          href={ALBUM.links.presave}
           target="_blank"
           rel="noopener noreferrer"
           className="px-4 py-2 rounded-full text-sm font-semibold text-white bg-[#3f46e5] hover:opacity-90 transition"
@@ -301,152 +239,52 @@ useEffect(() => {
             <p className="text-sm md:text-xl text-white mt-1">{track?.title}</p>
           </div>
 
-         <div className="flex items-center gap-2 justify-center lg:justify-start">
-  {/* Shuffle */}
-  <button
-    onClick={() => setShuffle(s => !s)}
-    className="p-2 rounded-full transition"
-    style={{ background: shuffle ? "#7a5cff" : "#cfa56a" }}
-    title={shuffle ? "Shuffle: On" : "Shuffle: Off"}
-  >
-    <Shuffle className={`w-4 h-4 ${shuffle ? "text-white" : "text-black"}`} />
-  </button>
-
-  {/* Prev */}
-  <button onClick={() => {
-  const ni = prevIndex();
-  setIndex(ni);
-  setProgress(0);
-  setDuration(0);
-  requestAnimationFrame(() => audioRef.current?.play().catch(()=>{}));
-  setIsPlaying(true);
-}} className="p-2 rounded-full bg-[#cfa56a]">
-  <SkipBack className="w-4 h-4" />
-</button>
-
-  {/* Play/Pause */}
-  <button onClick={togglePlay} className="p-3 rounded-full bg-[#f5b14b] text-black hover:bg-[#7a5cff] hover:text-white transition-colors">
-    {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
-  </button>
-
-  {/* Next — wraps to first on last */}
-  <button onClick={() => {
-  const ni = nextIndex({ fromButton:true });
-  setIndex(ni);
-  setProgress(0);
-  setDuration(0);
-  requestAnimationFrame(() => audioRef.current?.play().catch(()=>{}));
-  setIsPlaying(true);
-}} className="p-2 rounded-full bg-[#cfa56a]">
-  <SkipForward className="w-4 h-4" />
-</button>
-
-  {/* Repeat: off -> one -> all */}
-  <button
-    onClick={() => setRepeatMode(m => (m === "off" ? "one" : m === "one" ? "all" : "off"))}
-    className="p-2 rounded-full transition"
-    style={{ background: repeatMode === "off" ? "#cfa56a" : "#7a5cff" }}
-    title={`Repeat: ${repeatMode}`}
-  >
-    <Repeat className={`w-4 h-4 ${repeatMode === "off" ? "text-black" : "text-white"}`} />
-  </button>
-</div>
-
-
+          {/* Controls */}
+          <div className="flex items-center gap-2 justify-center lg:justify-start">
+            <button onClick={()=>setIndex(prevIndex())} className="p-2 rounded-full bg-[#cfa56a]"><SkipBack className="w-4 h-4"/></button>
+            <button onClick={togglePlay} className="p-3 rounded-full bg-[#f5b14b] text-black hover:bg-[#7a5cff] hover:text-white transition-colors">
+              {isPlaying?<Pause className="w-5 h-5"/>:<Play className="w-5 h-5"/>}
+            </button>
+            <button onClick={()=>setIndex(nextIndex())} className="p-2 rounded-full bg-[#cfa56a]"><SkipForward className="w-4 h-4"/></button>
+          </div>
 
           {/* Seek bar */}
-          <input
-  type="range"
-  min={0}
-  max={duration || 0}
-  step={0.1}
-  value={progress}
-  onChange={(e) => seek(parseFloat(e.target.value))}
-  className="w-full accent-white h-5"
-/>
-<div className="flex justify-between text-xs text-zinc-400">
-  <span>{fmt(progress)}</span>
-  <span>{fmt(duration)}</span>
-</div>
-
-
-          {/* Volume Controls */}
-<div className="mt-4 flex items-center gap-3">
-  <button
-     onClick={() => setMuted(!muted)}
-    className="p-2 rounded-full transition"
-    style={{ background: muted || volume === 0 ? "#7a5cff" : "#cfa56a" }}
-    title={muted ? "Unmute" : "Mute"}
-  >
-    {muted || volume === 0 ? (
-      <VolumeX className="w-4 h-4 text-white" />
-    ) : (
-      <Volume2 className="w-4 h-4 text-black" />
-    )}
-  </button>
-
-  <input
-  type="range"
-  min={0}
-  max={1}
-  step={0.01}
-  value={muted ? 0 : volume}
-  onChange={(e) => setVolume(parseFloat(e.target.value))}
-  className="
-    w-32 h-2 rounded-lg appearance-none cursor-pointer
-    bg-zinc-700
-    accent-[var(--accent)]
-  "
-  style={{
-  '--accent': volume > 0.7 ? BRAND.colors.accentSecondary : BRAND.colors.accent,
-  boxShadow: `0 0 6px ${volume > 0.7 ? BRAND.colors.accentSecondary : BRAND.colors.accent}`
-}}
-
-/>
-
-</div>
-
+          <div className="mt-3">
+            <input
+              type="range"
+              min={0}
+              max={duration||0}
+              step={0.1}
+              value={progress}
+              onChange={(e)=>seek(parseFloat(e.target.value))}
+              className="w-full accent-white h-5"
+            />
+            <div className="flex justify-between text-xs text-zinc-400">
+              <span>{fmt(progress)}</span><span>{fmt(duration)}</span>
+            </div>
+          </div>
 
           {/* Tracklist */}
           <ol className="space-y-2 overflow-auto flex-1 mt-6">
-  {ALBUM.tracks.map((t, i) => (
-    <li key={t.id}>
-      <button
-        onClick={() => {
-          setIndex(i);             // switch to selected track
-          setProgress(0);          // reset slider
-          setDuration(0);          // reset duration until metadata loads
-          requestAnimationFrame(() => {
-            audioRef.current?.play().catch(()=>{});
-          });
-          setIsPlaying(true);
-        }}
-        className={`w-full px-3 py-2 rounded-lg flex justify-between items-center ${
-          i === index
-            ? "bg-[#f5b14b] text-white"
-            : "bg-zinc-800/70 hover:bg-[#cfa56a] text-white"
-        }`}
-      >
-        <span>{i + 1}. {t.title}</span>
-        <span className={`text-xs ${i === index ? "text-black/70" : "text-zinc-300/80"}`}>
-          {durations[t.id] ? fmt(durations[t.id]) : "—"}
-        </span>
-      </button>
-
-      {/* Hidden audio for duration (only for metadata, not playback) */}
-      <audio
-        src={asset(t.src)}
-        preload="metadata"
-        onLoadedMetadata={(e) => {
-          const d = Math.floor(e.currentTarget.duration || 0);
-          if (d > 0) setDurations(prev => ({ ...prev, [t.id]: d }));
-        }}
-        style={{ display: "none" }}
-      />
-    </li>
-  ))}
-</ol>
-
+            {ALBUM.tracks.map((t, i) => (
+              <li key={t.id}>
+                <button
+                  onClick={() => {
+                    setIndex(i);
+                    setIsPlaying(true);
+                    requestAnimationFrame(() => audioRef.current?.play().catch(()=>{}));
+                  }}
+                  className={`w-full px-3 py-2 rounded-lg flex justify-between ${
+                    i === index
+                      ? "bg-[#f5b14b] text-white"
+                      : "bg-zinc-800/70 hover:bg-[#cfa56a] text-white"
+                  }`}
+                >
+                  <span>{i + 1}. {t.title}</span>
+                </button>
+              </li>
+            ))}
+          </ol>
         </div>
       </main>
 
