@@ -251,7 +251,7 @@ function PlayerUI({ ALBUM, BRAND, embed = false }) {
     <div className="flex flex-col min-h-screen">
       {/* Header */}
       <header
-        className="flex items-center justify-center gap-3 sm:px-4 md:px-8 py-6"
+        className="flex items-center justify-center gap-3 sm:px-[96px] px-8 py-6"
         style={{
           background: `linear-gradient(90deg, ${BRAND.colors.accent} 0%, ${BRAND.colors.accentSecondary} 50%, ${BRAND.colors.accent} 100%)`,
           backdropFilter: "blur(6px)",
