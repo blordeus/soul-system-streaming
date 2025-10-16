@@ -105,7 +105,7 @@ const DEFAULT_ALBUM = {
      {
       id: "t13",
       title: "Lost or Found?",
-      src: "/audio/13.Immortal-sample-Flip-(v3).mp3",
+      src: "/audio/13.Immortal-sample-Flip-(v3)mp3",
       durationHint: 0,
     },
     // { id: "t13", title: "13 — Night Signal", src: "/audio/13.mp3", durationHint: 0 }
